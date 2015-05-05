@@ -247,6 +247,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             };
         },
         link: function(scope, element, attrs, ngModelCtrl) {
+
             var hotkeys = [KEYS.enter, KEYS.comma, KEYS.space, KEYS.backspace, KEYS.delete, KEYS.left, KEYS.right],
                 tagList = scope.tagList,
                 events = scope.events,
@@ -289,7 +290,12 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                     tagList.items = [];
                 }
             });
-
+            scope.getTagItemClass = function(tag){
+                var theClass = {
+                    selected: tag === scope.tagList.selected};
+                    theClass[tag[options.metaDataTypeName]]=tag[options.metaDataTypeName];
+                return theClass;
+            };
             scope.$watch('tags.length', function() {
                 setElementValidity();
 
