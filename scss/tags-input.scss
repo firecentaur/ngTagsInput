@@ -24,7 +24,9 @@ tags-input {
       padding: 0;
       list-style-type: none;
     }
-
+    .tag-item li.selected{
+      background-color:pink !important;
+    }
     .tag-item {
       margin: 2px;
       padding: 0 5px;

@@ -15,8 +15,10 @@
         class="menu dropdown-menu pull-right">
           <!--------------------------------- edit button -------------------------------------------->
           <li ng-repeat="metaTag in metaData"
+              ng-class="{'selected':$getSelectedMetaDataType() === metaTag.content}"
               ng-click="$addMeta(metaTag)">
               {{metaTag.content}}
+
           </li>
       </ul>
    </span>

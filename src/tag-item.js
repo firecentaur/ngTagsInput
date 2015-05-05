@@ -29,6 +29,12 @@ tagsInput.directive('tiTagItem', function(tiUtil) {
             scope.$getDisplayText = function() {
                 return tiUtil.safeToString(scope.data[options.displayProperty]);
             };
+            scope.$getSelectedMetaDataType = function() {
+                return tiUtil.safeToString(scope.data[options.metaDataTypeName]);
+            };
+            scope.$getMetaDataTypeName = function() {
+                return options.metaDataTypeName;
+            };
             scope.$removeTag = function() {
                 tagsInput.removeTag(scope.$index);
             };
