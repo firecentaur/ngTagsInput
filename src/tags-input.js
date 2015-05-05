@@ -180,7 +180,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 minLength: [Number, 3],
                 maxLength: [Number, MAX_SAFE_INTEGER],
                 addOnEnter: [Boolean, true],
-                metaTypeName: [String, 'metaType'],
+                metaDataTypeName:[String,'metaType'],
                 addOnSpace: [Boolean, false],
                 addOnComma: [Boolean, true],
                 addOnBlur: [Boolean, true],

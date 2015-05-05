@@ -16,6 +16,7 @@ tagsInput.directive('tiTagItem', function(tiUtil) {
         scope: {
             data: '=',
             metaData:'=',
+            metaDataTypeName:'@',
             onMetaChange:'&'
         },
         link: function(scope, element, attrs, tagsInputCtrl) {
