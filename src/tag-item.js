@@ -13,7 +13,11 @@ tagsInput.directive('tiTagItem', function(tiUtil) {
         restrict: 'E',
         require: '^tagsInput',
         template: '<ng-include src="$$template"></ng-include>',
-        scope: { data: '=' },
+        scope: {
+            data: '=',
+            metaData:'=',
+            onMetaChange:'&'
+        },
         link: function(scope, element, attrs, tagsInputCtrl) {
             var tagsInput = tagsInputCtrl.registerTagItem(),
                 options = tagsInput.getOptions();
@@ -26,6 +30,9 @@ tagsInput.directive('tiTagItem', function(tiUtil) {
             };
             scope.$removeTag = function() {
                 tagsInput.removeTag(scope.$index);
+            };
+            scope.$addMeta= function(meta) {
+                tagsInput.addMeta(scope.$index,meta);
             };
 
             scope.$watch('$parent.$index', function(value) {

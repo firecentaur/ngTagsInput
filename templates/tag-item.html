@@ -1,2 +1,24 @@
 <span ng-bind="$getDisplayText()"></span>
+<span>
+    <span class="dropdown "
+      dropdown on-toggle="toggled(open)">
+      <span class="dropdown-toggle"
+            style="text-align:center;
+            width:50px!important;
+            height:100%;
+            cursor:pointer;
+            color:grey"
+            dropdown-toggle>
+          <i style="z-index:10000;color:black;margin-left:15px;display:inline-block" class="fa fa-caret-down"></i>
+      </span>
+      <ul style="color:black;"
+        class="menu dropdown-menu pull-right">
+          <!--------------------------------- edit button -------------------------------------------->
+          <li ng-repeat="metaTag in metaData"
+              ng-click="$addMeta(metaTag)">
+              {{metaTag.content}}
+          </li>
+      </ul>
+   </span>
+</span>
 <a class="remove-button" ng-click="$removeTag()" ng-bind="$$removeTagSymbol"></a>

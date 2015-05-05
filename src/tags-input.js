@@ -46,8 +46,8 @@
  *    available as $tag.
  */
 tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInputConfig, tiUtil) {
-    function TagList(options, events, onTagAdding, onTagRemoving) {
-        var self = {}, getTagText, setTagText, tagIsValid;
+    function TagList(options, events, onTagAdding, onTagRemoving, onMetaChange) {
+        var self = {}, getTagText, setTagText, tagIsValid, setMeta;
 
         getTagText = function(tag) {
             return tiUtil.safeToString(tag[options.displayProperty]);
@@ -55,6 +55,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
 
         setTagText = function(tag, text) {
             tag[options.displayProperty] = text;
+        };
+        setMeta = function(tag,meta){
+            onMetaChange({ $tag: tag, $meta:meta });
         };
 
         tagIsValid = function(tag) {
@@ -67,7 +70,10 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                    !tiUtil.findInObjectArray(self.items, tag, options.keyProperty || options.displayProperty) &&
                    onTagAdding({ $tag: tag });
         };
-
+        self.addMeta = function(tagIndex,meta){
+            var tag = self.items[tagIndex];
+            setMeta(tag,meta);
+        };
         self.items = [];
 
         self.addText = function(text) {
@@ -149,7 +155,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
         restrict: 'E',
         require: 'ngModel',
         scope: {
+            metaData:'=',
             tags: '=ngModel',
+            onMetaChange: '&',
             onTagAdding: '&',
             onTagAdded: '&',
             onInvalidTag: '&',
@@ -172,6 +180,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 minLength: [Number, 3],
                 maxLength: [Number, MAX_SAFE_INTEGER],
                 addOnEnter: [Boolean, true],
+                metaTypeName: [String, 'metaType'],
                 addOnSpace: [Boolean, false],
                 addOnComma: [Boolean, true],
                 addOnBlur: [Boolean, true],
@@ -190,7 +199,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
 
             $scope.tagList = new TagList($scope.options, $scope.events,
                 tiUtil.handleUndefinedResult($scope.onTagAdding, true),
-                tiUtil.handleUndefinedResult($scope.onTagRemoving, true));
+                tiUtil.handleUndefinedResult($scope.onTagRemoving, true),
+                tiUtil.handleUndefinedResult($scope.onMetaChange, true)
+            );
 
             this.registerAutocomplete = function() {
                 var input = $element.find('input');
@@ -228,6 +239,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                             return;
                         }
                         $scope.tagList.remove(index);
+                    },
+                    addMeta: function(index,meta) {
+                        $scope.tagList.addMeta(index,meta);
                     }
                 };
             };
@@ -246,7 +260,9 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
                 ngModelCtrl.$setValidity('minTags', tagList.items.length >= options.minTags);
                 ngModelCtrl.$setValidity('leftoverText', scope.hasFocus || options.allowLeftoverText ? true : !scope.newTag.text);
             };
-
+            scope.addMeta = function(tag,meta){
+                tagList.addMeta(tag,meta);
+            };
             ngModelCtrl.$isEmpty = function(value) {
                 return !value || !value.length;
             };
@@ -333,6 +349,7 @@ tagsInput.directive('tagsInput', function($timeout, $document, $window, tagsInpu
             };
 
             events
+                .on('meta-change', scope.onTagAdded)
                 .on('tag-added', scope.onTagAdded)
                 .on('invalid-tag', scope.onInvalidTag)
                 .on('tag-removed', scope.onTagRemoved)
